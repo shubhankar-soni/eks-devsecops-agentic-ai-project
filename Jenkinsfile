@@ -33,13 +33,9 @@ spec:
         }
     }
 
-    parameters {
-        string(name: 'ECR_REGISTRY', defaultValue: '123456789012.dkr.ecr.us-east-1.amazonaws.com', description: 'AWS ECR Registry URL')
-    }
-
     environment {
         APP_NAME        = 'devsecops-app'
-        REGISTRY        = "${params.ECR_REGISTRY}"
+        REGISTRY        = "${env.ECR_REGISTRY}" 
         IMAGE_TAG       = "${env.BUILD_NUMBER}"
         SONAR_SERVER    = 'sonar-server'
         AWS_REGION      = 'us-east-1'
@@ -65,7 +61,6 @@ spec:
             }
             post {
                 always {
-                    // Requires JUnit plugin installed
                     script {
                         try {
                             junit 'build/test-results/test/*.xml'
@@ -156,7 +151,6 @@ spec:
             container('python-agent') {
                 script {
                     echo "⚠️ Build Failed! Triggering AI Agent to diagnose root cause..."
-                    // Install curl in python slim container first
                     sh 'apt-get update && apt-get install -y curl'
                     sh 'curl -s "${BUILD_URL}consoleText" > console.log'
                     sh 'python3 scripts/ai_analyst.py console.log > ai_summary.json'

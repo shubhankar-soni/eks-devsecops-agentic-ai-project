@@ -65,7 +65,14 @@ spec:
             }
             post {
                 always {
-                    junit 'build/test-results/test/*.xml'
+                    // Requires JUnit plugin installed
+                    script {
+                        try {
+                            junit 'build/test-results/test/*.xml'
+                        } catch(Exception e) {
+                            echo "No JUnit report found to publish."
+                        }
+                    }
                 }
             }
         }
@@ -149,6 +156,8 @@ spec:
             container('python-agent') {
                 script {
                     echo "⚠️ Build Failed! Triggering AI Agent to diagnose root cause..."
+                    // Install curl in python slim container first
+                    sh 'apt-get update && apt-get install -y curl'
                     sh 'curl -s "${BUILD_URL}consoleText" > console.log'
                     sh 'python3 scripts/ai_analyst.py console.log > ai_summary.json'
                     sh 'cat ai_summary.json'

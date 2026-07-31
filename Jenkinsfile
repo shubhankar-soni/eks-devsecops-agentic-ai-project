@@ -122,17 +122,22 @@ stage('Container Build & Push (Kaniko)') {
 
 
         stage('Deploy to EKS') {
-            steps {
-                container('kubectl') {
-                    sh """
-                        kubectl set image deployment/${APP_NAME} \
-                          ${APP_NAME}=${REGISTRY}/${APP_NAME}:${IMAGE_TAG} \
-                          -n production
-                    """
+                steps {
+                    container('kubectl') {
+                        sh """
+                            # Substitute the dynamic image tag into the deployment manifest
+                            sed -i 's|IMAGE_PLACEHOLDER|${REGISTRY}/demo-microservice/${APP_NAME}:${IMAGE_TAG}|g' k8s/deployment.yaml
+                            
+                            # Apply all manifests in the k8s directory
+                            kubectl apply -f k8s/ -n production
+                            
+                            # Verify deployment rollouts successfully
+                            kubectl rollout status deployment/${APP_NAME} -n production --timeout=120s
+                        """
+                    }
                 }
             }
         }
-    }
 
     post {
         failure {

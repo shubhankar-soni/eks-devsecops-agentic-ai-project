@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: devsecops-app
-        image: 508931101100.dkr.ecr.us-east-1.amazonaws.com/demo-microservice/devsecops-app:latest
+        image: IMAGE_PLACEHOLDER
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

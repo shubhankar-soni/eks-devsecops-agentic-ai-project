@@ -35,7 +35,7 @@ spec:
 
     environment {
         APP_NAME        = 'devsecops-app'
-        REGISTRY        = "${env.ECR_REGISTRY}" 
+        REGISTRY        = "${env.ECR_REGISTRY}"
         IMAGE_TAG       = "${env.BUILD_NUMBER}"
         SONAR_SERVER    = 'sonar-server'
         AWS_REGION      = 'us-east-1'
@@ -153,10 +153,8 @@ spec:
                     echo "⚠️ Build Failed! Triggering AI Agent to diagnose root cause..."
                     sh 'apt-get update && apt-get install -y curl'
                     sh 'curl -s "${BUILD_URL}consoleText" > console.log'
-                    sh 'python3 scripts/ai_analyst.py console.log > ai_summary.json'
-                    sh 'cat ai_summary.json'
-                    def aiResult = readFile('ai_summary.json')
-                    createSummary(iconPath: 'warning.png', text: "### 🤖 AI Agent Diagnostic\n```json\n${aiResult}\n```")
+                    sh 'python3 scripts/ai_analyst.py console.log > ai_summary.json || true'
+                    sh 'cat ai_summary.json || echo "AI Summary generation skipped."'
                 }
             }
         }

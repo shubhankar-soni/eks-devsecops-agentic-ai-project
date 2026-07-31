@@ -35,15 +35,19 @@ spec:
 
     environment {
         APP_NAME       = 'demo-microservice'
-        REGISTRY       = '123456789012.dkr.ecr.us-east-1.amazonaws.com'
+        REGISTRY       = '${env.ECR_REGISTRY}'
         OPENAI_API_KEY = credentials('openai-api-key') // Stored in Jenkins Credentials Manager
     }
 
     stages {
-        stage('Unit Test') {
+        stage('Unit Test & Coverage') {
             steps {
                 container('gradle') {
-                    sh './gradlew test'
+                    sh '''
+                        gradle wrapper --gradle-version 8.5
+                        chmod +x ./gradlew
+                        ./gradlew test jacocoTestReport
+                    '''
                 }
             }
         }

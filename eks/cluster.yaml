@@ -1,0 +1,18 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: devops-project-cluster
+  region: us-east-1
+  version: "1.36"
+
+managedNodeGroups:
+  - name: ng-main
+    instanceType: t3.xlarge
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    iam:
+      withAddonPolicies:
+        albIngress: true
+        cloudWatch: true

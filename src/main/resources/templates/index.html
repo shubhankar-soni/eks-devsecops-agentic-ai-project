@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevSecOps Agentic AI App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between">
+
+    <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 p-2 rounded-lg text-white">
+                    <i class="fa-solid fa-robot text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">DevSecOps Agentic AI App</h1>
+                    <p class="text-xs text-slate-400">Deployed on Amazon EKS via Jenkins</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full text-emerald-400 text-xs font-semibold">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                System Operational
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-12 flex-1 w-full flex flex-col items-center justify-center">
+        <div class="text-center max-w-3xl mb-12">
+            <span class="text-xs uppercase tracking-widest bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/20 font-semibold">Cloud Native Agentic AI</span>
+            <h2 class="text-4xl sm:text-5xl font-extrabold mt-4 mb-4 tracking-tight text-white">
+                Spring Boot Microservice
+            </h2>
+            <p class="text-slate-400 text-base sm:text-lg">
+                Automated continuous integration pipeline with dynamic EKS Pod agents, SonarQube, Trivy, and automated LLM failure analysis.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mb-12">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
+                <div class="text-slate-400 mb-2 text-sm font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-server text-indigo-400"></i> Pod IP
+                </div>
+                <div class="text-xl font-bold font-mono text-indigo-300" th:text="${podIp}">127.0.0.1</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
+                <div class="text-slate-400 mb-2 text-sm font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-microchip text-indigo-400"></i> Java Runtime
+                </div>
+                <div class="text-xl font-bold font-mono text-indigo-300" th:text="${javaVersion}">Java 17</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
+                <div class="text-slate-400 mb-2 text-sm font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-cubes text-indigo-400"></i> Environment
+                </div>
+                <div class="text-xl font-bold font-mono text-indigo-300 uppercase" th:text="${environment}">EKS Cluster</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-800 bg-slate-900/40 py-6 text-center text-xs text-slate-500">
+        <p>DevSecOps Agentic AI App &bull; Built with Spring Boot & Tailwind CSS</p>
+    </footer>
+
+</body>
+</html>

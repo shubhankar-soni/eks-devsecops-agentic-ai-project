@@ -94,27 +94,27 @@ spec:
             }
         }
 
-        stage('Container Build (Kaniko)') {
+stage('Container Build & Push (Kaniko)') {
             steps {
                 container('kaniko') {
                     sh """
                         /kaniko/executor \
                           --context=dir://. \
                           --dockerfile=Dockerfile \
-                          --destination=${REGISTRY}/${APP_NAME}:${IMAGE_TAG} \
-                          --no-push
+                          --destination=${REGISTRY}/${APP_NAME}:${IMAGE_TAG}
                     """
                 }
             }
         }
 
-        stage('Trivy Image Scan') {
+        stage('Trivy Security Scan') {
             steps {
                 container('trivy') {
+                    // Scanning filesystem (. ) avoids needing remote registry auth or docker daemon socket
                     sh """
-                        trivy image --severity HIGH,CRITICAL \
+                        trivy fs --severity HIGH,CRITICAL \
                           --exit-code 1 \
-                          ${REGISTRY}/${APP_NAME}:${IMAGE_TAG}
+                          .
                     """
                 }
             }

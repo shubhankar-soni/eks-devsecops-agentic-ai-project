@@ -33,13 +33,26 @@ spec:
         }
     }
 
+    parameters {
+        string(name: 'ECR_REGISTRY', defaultValue: '123456789012.dkr.ecr.us-east-1.amazonaws.com', description: 'AWS ECR Registry URL')
+    }
+
     environment {
-        APP_NAME       = 'demo-microservice'
-        REGISTRY       = '${env.ECR_REGISTRY}'
-        OPENAI_API_KEY = credentials('openai-api-key') // Stored in Jenkins Credentials Manager
+        APP_NAME        = 'devsecops-app'
+        REGISTRY        = "${params.ECR_REGISTRY}"
+        IMAGE_TAG       = "${env.BUILD_NUMBER}"
+        SONAR_SERVER    = 'sonar-server'
+        AWS_REGION      = 'us-east-1'
+        OPENAI_API_KEY  = credentials('openai-api-key')
     }
 
     stages {
+        stage('Source Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Unit Test & Coverage') {
             steps {
                 container('gradle') {
@@ -50,17 +63,85 @@ spec:
                     '''
                 }
             }
-        }
-        
-        stage('Trivy Security Scan') {
-            steps {
-                container('trivy') {
-                    sh 'trivy fs --severity HIGH,CRITICAL --exit-code 1 .'
+            post {
+                always {
+                    junit 'build/test-results/test/*.xml'
                 }
             }
         }
 
-        // Additional stages (Sonar, Kaniko, Deploy)...
+        stage('SonarQube Analysis') {
+            steps {
+                container('gradle') {
+                    withSonarQubeEnv(SONAR_SERVER) {
+                        sh '''
+                            ./gradlew sonar \
+                              -Dsonar.projectKey=${APP_NAME} \
+                              -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Container Build (Kaniko)') {
+            steps {
+                container('kaniko') {
+                    sh """
+                        /kaniko/executor \
+                          --context=dir://. \
+                          --dockerfile=Dockerfile \
+                          --destination=${REGISTRY}/${APP_NAME}:${IMAGE_TAG} \
+                          --no-push
+                    """
+                }
+            }
+        }
+
+        stage('Trivy Image Scan') {
+            steps {
+                container('trivy') {
+                    sh """
+                        trivy image --severity HIGH,CRITICAL \
+                          --exit-code 1 \
+                          ${REGISTRY}/${APP_NAME}:${IMAGE_TAG}
+                    """
+                }
+            }
+        }
+
+        stage('Push Image to ECR') {
+            steps {
+                container('kaniko') {
+                    sh """
+                        /kaniko/executor \
+                          --context=dir://. \
+                          --dockerfile=Dockerfile \
+                          --destination=${REGISTRY}/${APP_NAME}:${IMAGE_TAG}
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to EKS') {
+            steps {
+                container('kubectl') {
+                    sh """
+                        kubectl set image deployment/${APP_NAME} \
+                          ${APP_NAME}=${REGISTRY}/${APP_NAME}:${IMAGE_TAG} \
+                          -n production
+                    """
+                }
+            }
+        }
     }
 
     post {
@@ -68,21 +149,16 @@ spec:
             container('python-agent') {
                 script {
                     echo "⚠️ Build Failed! Triggering AI Agent to diagnose root cause..."
-                    
-                    // 1. Fetch raw build logs using Jenkins API or console output
                     sh 'curl -s "${BUILD_URL}consoleText" > console.log'
-                    
-                    // 2. Run the AI agent analysis script
                     sh 'python3 scripts/ai_analyst.py console.log > ai_summary.json'
-                    
-                    // 3. Print the AI diagnosis directly into the console log
                     sh 'cat ai_summary.json'
-                    
-                    // 4. Publish AI diagnosis to the Jenkins Build Page HTML summary
                     def aiResult = readFile('ai_summary.json')
                     createSummary(iconPath: 'warning.png', text: "### 🤖 AI Agent Diagnostic\n```json\n${aiResult}\n```")
                 }
             }
+        }
+        always {
+            cleanWs()
         }
     }
 }

@@ -120,18 +120,6 @@ stage('Container Build & Push (Kaniko)') {
             }
         }
 
-        stage('Push Image to ECR') {
-            steps {
-                container('kaniko') {
-                    sh """
-                        /kaniko/executor \
-                          --context=dir://. \
-                          --dockerfile=Dockerfile \
-                          --destination=${REGISTRY}/${APP_NAME}:${IMAGE_TAG}
-                    """
-                }
-            }
-        }
 
         stage('Deploy to EKS') {
             steps {
@@ -153,8 +141,9 @@ stage('Container Build & Push (Kaniko)') {
                     echo "⚠️ Build Failed! Triggering AI Agent to diagnose root cause..."
                     sh 'apt-get update && apt-get install -y curl'
                     sh 'curl -s "${BUILD_URL}consoleText" > console.log'
+                    // Handles error gracefully if OpenAI rate limits (429) occur
                     sh 'python3 scripts/ai_analyst.py console.log > ai_summary.json || true'
-                    sh 'cat ai_summary.json || echo "AI Summary generation skipped."'
+                    sh 'cat ai_summary.json || echo "AI Summary skipped due to API limits."'
                 }
             }
         }

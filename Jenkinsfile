@@ -13,14 +13,35 @@ spec:
     image: gradle:8.5-jdk17
     command: ['cat']
     tty: true
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+      limits:
+        cpu: "2"
+        memory: "2Gi"
   - name: trivy
     image: aquasec/trivy:latest
     command: ['cat']
     tty: true
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "256Mi"
+      limits:
+        cpu: "1"
+        memory: "1Gi"
   - name: kaniko
     image: gcr.io/kaniko-project/executor:debug
     command: ['cat']
     tty: true
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+      limits:
+        cpu: "2"
+        memory: "2Gi"
   - name: kubectl
     image: bitnami/kubectl:latest
     command: ['cat']
@@ -129,7 +150,7 @@ stage('Container Build & Push (Kaniko)') {
                             sed -i 's|IMAGE_PLACEHOLDER|${REGISTRY}/demo-microservice/${APP_NAME}:${IMAGE_TAG}|g' k8s/deployment.yaml
                             
                             # Apply all manifests in the k8s directory
-                            kubectl apply -f k8s/ -n production
+                            kubectl apply -f k8s/*.yaml -n production
                             
                             # Verify deployment rollouts successfully
                             kubectl rollout status deployment/${APP_NAME} -n production --timeout=120s
@@ -153,7 +174,7 @@ stage('Container Build & Push (Kaniko)') {
             }
         }
         always {
-            cleanWs()
+            deleteDir()
         }
     }
 }

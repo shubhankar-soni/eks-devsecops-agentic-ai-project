@@ -62,7 +62,7 @@ spec:
         IMAGE_TAG       = "${env.BUILD_NUMBER}"
         SONAR_SERVER    = 'sonar-server'
         AWS_REGION      = 'us-east-1'
-        OPENAI_API_KEY  = credentials('openai-api-key')
+        GEMINI_API_KEY  = credentials('gemini-api-key')
     }
 
     stages {
@@ -171,7 +171,7 @@ stage('Container Build & Push (Kaniko)') {
                         kubectl get deployment \
                             this-deployment-definitely-does-not-exist \
                             -n production
-                            
+
                         # Verify rollout
                         kubectl rollout status deployment/${APP_NAME} \
                             -n production \
@@ -190,20 +190,17 @@ stage('Container Build & Push (Kaniko)') {
                 script {
                     echo "⚠️ Build Failed! Triggering AI Agent to diagnose root cause..."
                     sh '''
-                        echo "=== Checking AI Agent ==="
-                        pwd
-                        ls -la
-                        ls -la scripts/
-
-                        echo "=== Installing dependencies ==="
                         apt-get update
                         apt-get install -y curl
 
-                        echo "=== Downloading Jenkins logs ==="
+                        echo "Downloading Jenkins console log..."
                         curl -s "${BUILD_URL}consoleText" > console.log
 
-                        echo "=== Running AI analysis ==="
+                        echo "Running Gemini AI analysis..."
                         python3 scripts/ai_analyst.py console.log
+
+                        echo "Generated AI diagnosis:"
+                        cat ai_summary.json
                     '''
                 }
             }

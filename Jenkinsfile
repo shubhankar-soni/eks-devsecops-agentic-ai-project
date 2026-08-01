@@ -151,6 +151,9 @@ stage('Container Build & Push (Kaniko)') {
                             # Substitute the dynamic image tag into the deployment manifest
                             sed -i 's|IMAGE_PLACEHOLDER|${REGISTRY}/demo-microservice/${APP_NAME}:${IMAGE_TAG}|g' k8s/deployment.yaml
                             
+                            pwd
+                            ls -lt
+                            whoami
                             # Apply all manifests in the k8s directory
                             kubectl apply -f k8s/*.yaml -n production
                             

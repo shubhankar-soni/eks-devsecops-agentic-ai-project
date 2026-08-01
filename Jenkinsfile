@@ -150,14 +150,16 @@ stage('Container Build & Push (Kaniko)') {
                     sh '''
                         apk add --no-cache kubectl
 
-                        kubectl version --client
+                        echo "Deploying ${APP_NAME}:${IMAGE_TAG}"
 
-                        echo "Checking RBAC..."
-                        kubectl auth can-i get pods -n production
-                        kubectl auth can-i create deployments -n production
+                        sed -i 's|IMAGE_PLACEHOLDER|${REGISTRY}/${APP_NAME}:${IMAGE_TAG}|g' \
+                            k8s/deployment.yaml
 
-                        echo "Listing production pods..."
-                        kubectl get pods -n production
+                        kubectl apply -f k8s/ -n production
+
+                        kubectl rollout status deployment/${APP_NAME} \
+                            -n production \
+                            --timeout=120s
                     '''
                 }
             }

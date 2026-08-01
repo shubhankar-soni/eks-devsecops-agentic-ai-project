@@ -45,7 +45,7 @@ spec:
         cpu: "2"
         memory: "2Gi"
   - name: kubectl
-    image: alpine:3.20
+    image: registry.k8s.io/kubectl:v1.31.0
     command: ['cat']
     tty: true
   - name: python-agent

@@ -45,7 +45,7 @@ spec:
         cpu: "2"
         memory: "2Gi"
   - name: kubectl
-    image: registry.k8s.io/kubectl:v1.31.0
+    image: rancher/kubectl:v1.33.1
     command: ['cat']
     tty: true
   - name: python-agent
@@ -148,13 +148,19 @@ stage('Container Build & Push (Kaniko)') {
             steps {
                 container('kubectl') {
                     sh '''
-                        echo "HELLO FROM KUBECTL CONTAINER"
-                        whoami
-                        pwd
-                        ls -la
+                        echo "=== Shell ==="
                         which sh
+
+                        echo "=== Kubectl ==="
                         which kubectl
                         kubectl version --client
+
+                        echo "=== Kubernetes access ==="
+                        kubectl auth can-i get pods -n production
+                        kubectl auth can-i create deployments -n production
+
+                        echo "=== Pods ==="
+                        kubectl get pods -n production
                     '''
                 }
             }

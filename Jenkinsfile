@@ -45,7 +45,7 @@ spec:
         cpu: "2"
         memory: "2Gi"
   - name: kubectl
-    image: rancher/kubectl:v1.33.1
+    image: alpine:3.20
     command: ['cat']
     tty: true
   - name: python-agent
@@ -148,18 +148,15 @@ stage('Container Build & Push (Kaniko)') {
             steps {
                 container('kubectl') {
                     sh '''
-                        echo "=== Shell ==="
-                        which sh
+                        apk add --no-cache kubectl
 
-                        echo "=== Kubectl ==="
-                        which kubectl
                         kubectl version --client
 
-                        echo "=== Kubernetes access ==="
+                        echo "Checking RBAC..."
                         kubectl auth can-i get pods -n production
                         kubectl auth can-i create deployments -n production
 
-                        echo "=== Pods ==="
+                        echo "Listing production pods..."
                         kubectl get pods -n production
                     '''
                 }

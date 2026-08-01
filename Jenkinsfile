@@ -172,6 +172,8 @@ stage('Container Build & Push (Kaniko)') {
                         kubectl rollout status deployment/${APP_NAME} \
                             -n production \
                             --timeout=120s
+
+                        kubectl get pods -n production-does-not-exist
                     '''
                 }
             }

@@ -1,6 +1,7 @@
 pipeline {
     agent {
         kubernetes {
+            serviceAccount 'jenkins-agent'
             yaml '''
 apiVersion: v1
 kind: Pod
@@ -8,6 +9,7 @@ metadata:
   labels:
     component: jenkins-agent
 spec:
+  serviceAccountName: jenkins-agent
   containers:
   - name: gradle
     image: gradle:8.5-jdk17

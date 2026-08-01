@@ -211,15 +211,93 @@ post {
                           "${BUILD_URL}consoleText" \
                           -o console.log
 
-                        echo "Checking console log..."
-                        tail -50 console.log
-
                         echo "Running Gemini AI analysis..."
+
                         python3 scripts/ai_analyst.py console.log
 
                         echo "Generated AI diagnosis:"
                         cat ai_summary.json
                     '''
+
+                    // Read Gemini-generated JSON
+                    def diagnosis = readJSON file: 'ai_summary.json'
+
+                    echo "Sending failure report email..."
+
+                    emailext(
+                        to: 'shubhankar.soni@gmail.com',
+
+                        subject: "Jenkins Build Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+
+                        mimeType: 'text/html',
+
+                        body: """
+                            <html>
+                            <body>
+
+                            <h2>Jenkins Build Failure Report</h2>
+
+                            <table border="1" cellpadding="8" cellspacing="0">
+
+                                <tr>
+                                    <td><b>Job Name</b></td>
+                                    <td>${env.JOB_NAME}</td>
+                                </tr>
+
+                                <tr>
+                                    <td><b>Build Number</b></td>
+                                    <td>${env.BUILD_NUMBER}</td>
+                                </tr>
+
+                                <tr>
+                                    <td><b>Status</b></td>
+                                    <td>FAILED</td>
+                                </tr>
+
+                                <tr>
+                                    <td><b>Failed Stage</b></td>
+                                    <td>${diagnosis.failed_stage}</td>
+                                </tr>
+
+                                <tr>
+                                    <td><b>Failure Category</b></td>
+                                    <td>${diagnosis.failure_category}</td>
+                                </tr>
+
+                            </table>
+
+                            <h3>Root Cause</h3>
+
+                            <p>
+                                ${diagnosis.root_cause}
+                            </p>
+
+                            <h3>Technical Explanation</h3>
+
+                            <p>
+                                ${diagnosis.explanation}
+                            </p>
+
+                            <h3>Suggested Fix</h3>
+
+                            <p>
+                                ${diagnosis.suggested_fix}
+                            </p>
+
+                            <hr>
+
+                            <p>
+                                <a href="${env.BUILD_URL}">
+                                    View Jenkins Build
+                                </a>
+                            </p>
+
+                            </body>
+                            </html>
+                        """
+                    )
+
+                    echo "Failure report email sent."
                 }
             }
         }

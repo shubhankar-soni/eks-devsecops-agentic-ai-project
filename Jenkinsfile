@@ -168,12 +168,16 @@ stage('Container Build & Push (Kaniko)') {
                         kubectl apply -f k8s/deployment.yaml -n production
                         kubectl apply -f k8s/service.yaml -n production
 
+                        kubectl get deployment \
+                            this-deployment-definitely-does-not-exist \
+                            -n production
+                            
                         # Verify rollout
                         kubectl rollout status deployment/${APP_NAME} \
                             -n production \
                             --timeout=120s
 
-                        kubectl get pods -n production-does-not-exist
+
                     '''
                 }
             }

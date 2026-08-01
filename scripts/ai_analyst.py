@@ -82,7 +82,6 @@ Do not include ```json.
             }
         ],
         "generationConfig": {
-            "temperature": 0.2,
             "responseMimeType": "application/json"
         }
     }).encode("utf-8")
@@ -90,7 +89,7 @@ Do not include ```json.
 
     url = (
         "https://generativelanguage.googleapis.com/"
-        "v1beta/models/gemini-2.5-flash:generateContent"
+        "v1beta/models/gemini-3.5-flash-lite:generateContent"
     )
 
     request = urllib.request.Request(

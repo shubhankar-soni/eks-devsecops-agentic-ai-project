@@ -144,26 +144,22 @@ stage('Container Build & Push (Kaniko)') {
         }
 
 
-        stage('Deploy to EKS') {
-                steps {
-                    container('kubectl') {
-                        sh """
-                            # Substitute the dynamic image tag into the deployment manifest
-                            sed -i 's|IMAGE_PLACEHOLDER|${REGISTRY}/${APP_NAME}:${IMAGE_TAG}|g' k8s/deployment.yaml
-                            
-                            pwd
-                            ls -lt
-                            whoami
-                            # Apply all manifests in the k8s directory
-                            #kubectl apply -f k8s/*.yaml -n production
-                            
-                            # Verify deployment rollouts successfully
-                            #kubectl rollout status deployment/${APP_NAME} -n production --timeout=120s
-                        """
-                    }
+        stage('Deploy Debug') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        echo "HELLO FROM KUBECTL CONTAINER"
+                        whoami
+                        pwd
+                        ls -la
+                        which sh
+                        which kubectl
+                        kubectl version --client
+                    '''
                 }
             }
         }
+    }
 
     post {
         failure {

@@ -152,11 +152,23 @@ stage('Container Build & Push (Kaniko)') {
 
                         echo "Deploying ${APP_NAME}:${IMAGE_TAG}"
 
-                        sed -i 's|IMAGE_PLACEHOLDER|${REGISTRY}/${APP_NAME}:${IMAGE_TAG}|g' \
+                        sed -i "s|IMAGE_PLACEHOLDER|${REGISTRY}/${APP_NAME}:${IMAGE_TAG}|g" \
                             k8s/deployment.yaml
 
-                        kubectl apply -f k8s/ -n production
+                        # Create/update namespace first
+                        kubectl apply -f k8s/namespace.yaml
 
+                        # Wait until namespace is Active
+                        kubectl wait \
+                            --for=jsonpath='{.status.phase}'=Active \
+                            namespace/production \
+                            --timeout=30s
+
+                        # Deploy application
+                        kubectl apply -f k8s/deployment.yaml -n production
+                        kubectl apply -f k8s/service.yaml -n production
+
+                        # Verify rollout
                         kubectl rollout status deployment/${APP_NAME} \
                             -n production \
                             --timeout=120s

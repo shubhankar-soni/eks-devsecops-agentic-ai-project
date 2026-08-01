@@ -155,10 +155,10 @@ stage('Container Build & Push (Kaniko)') {
                             ls -lt
                             whoami
                             # Apply all manifests in the k8s directory
-                            kubectl apply -f k8s/*.yaml -n production
+                            #kubectl apply -f k8s/*.yaml -n production
                             
                             # Verify deployment rollouts successfully
-                            kubectl rollout status deployment/${APP_NAME} -n production --timeout=120s
+                            #kubectl rollout status deployment/${APP_NAME} -n production --timeout=120s
                         """
                     }
                 }

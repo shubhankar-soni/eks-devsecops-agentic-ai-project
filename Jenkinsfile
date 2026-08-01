@@ -183,16 +183,24 @@ stage('Container Build & Push (Kaniko)') {
             container('python-agent') {
                 script {
                     echo "⚠️ Build Failed! Triggering AI Agent to diagnose root cause..."
-                    sh 'apt-get update && apt-get install -y curl'
-                    sh 'curl -s "${BUILD_URL}consoleText" > console.log'
-                    // Handles error gracefully if OpenAI rate limits (429) occur
-                    sh 'python3 scripts/ai_analyst.py console.log > ai_summary.json || true'
-                    sh 'cat ai_summary.json || echo "AI Summary skipped due to API limits."'
+                    sh '''
+                        echo "=== Checking AI Agent ==="
+                        pwd
+                        ls -la
+                        ls -la scripts/
+
+                        echo "=== Installing dependencies ==="
+                        apt-get update
+                        apt-get install -y curl
+
+                        echo "=== Downloading Jenkins logs ==="
+                        curl -s "${BUILD_URL}consoleText" > console.log
+
+                        echo "=== Running AI analysis ==="
+                        python3 scripts/ai_analyst.py console.log
+                    '''
                 }
             }
         }
-        always {
-            deleteDir()
         }
-    }
 }

@@ -144,7 +144,7 @@ stage('Container Build & Push (Kaniko)') {
         }
 
 
-        stage('Deploy Debug') {
+        stage('Deploy to EKS') {
             steps {
                 container('kubectl') {
                     sh '''
@@ -190,7 +190,7 @@ post {
 
             withCredentials([
                 usernamePassword(
-                    credentialsId: 'jenkins-api-agent',
+                    credentialsId: 'jenkins-ai-agent',
                     usernameVariable: 'JENKINS_USER',
                     passwordVariable: 'JENKINS_TOKEN'
                 )

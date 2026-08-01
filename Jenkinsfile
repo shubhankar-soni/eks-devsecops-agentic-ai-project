@@ -45,7 +45,7 @@ spec:
         cpu: "2"
         memory: "2Gi"
   - name: kubectl
-    image: bitnami/kubectl:latest
+    image: alpine:3.20
     command: ['cat']
     tty: true
   - name: python-agent

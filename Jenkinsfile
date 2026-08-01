@@ -184,17 +184,35 @@ stage('Container Build & Push (Kaniko)') {
         }
     }
 
-    post {
-        failure {
-            container('python-agent') {
+post {
+    failure {
+        container('python-agent') {
+
+            withCredentials([
+                usernamePassword(
+                    credentialsId: 'jenkins-api-agent',
+                    usernameVariable: 'JENKINS_USER',
+                    passwordVariable: 'JENKINS_TOKEN'
+                )
+            ]) {
+
                 script {
-                    echo "⚠️ Build Failed! Triggering AI Agent to diagnose root cause..."
+
+                    echo "⚠️ Build Failed! Triggering AI Agent..."
+
                     sh '''
                         apt-get update
                         apt-get install -y curl
 
                         echo "Downloading Jenkins console log..."
-                        curl -s "${BUILD_URL}consoleText" > console.log
+
+                        curl --fail -sS \
+                          -u "${JENKINS_USER}:${JENKINS_TOKEN}" \
+                          "${BUILD_URL}consoleText" \
+                          -o console.log
+
+                        echo "Checking console log..."
+                        tail -50 console.log
 
                         echo "Running Gemini AI analysis..."
                         python3 scripts/ai_analyst.py console.log
@@ -205,5 +223,6 @@ stage('Container Build & Push (Kaniko)') {
                 }
             }
         }
-        }
+    }
+}
 }

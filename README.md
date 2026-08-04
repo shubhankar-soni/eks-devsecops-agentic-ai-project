@@ -1,11 +1,29 @@
 # AWS EKS DevSecOps Agentic AI Project
-[![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white)](https://www.java.com)
-[![Gradle](https://img.shields.io/badge/Gradle-02303A?style=flat&logo=gradle&logoColor=white)](https://gradle.org)
-[![JUnit](https://img.shields.io/badge/JUnit5-25A162?style=flat&logo=junit5&logoColor=white)](https://junit.org/junit5/)
-[![JaCoCo](https://img.shields.io/badge/JaCoCo-C71A36?style=flat&logo=eclipseide&logoColor=white)](https://www.eclemma.org/jacoco/)
-[![SonarQube](https://img.shields.io/badge/SonarQube-4E9BCD?style=flat&logo=sonarqube&logoColor=white)](https://www.sonarqube.org/)
-[![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=flat&logo=kubernetes&logoColor=white)](https://kubernetes.io)
-[![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat&logo=amazon-aws&logoColor=FF9900)](https://aws.amazon.com)
+
+<p align="center">
+  <a href="https://www.java.com" target="_blank">
+    <img src="https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java" />
+  </a>
+  <a href="https://gradle.org" target="_blank">
+    <img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white" alt="Gradle" />
+  </a>
+  <a href="https://junit.org/junit5/" target="_blank">
+    <img src="https://img.shields.io/badge/JUnit5-25A162?style=flat-square&logo=junit5&logoColor=white" alt="JUnit" />
+  </a>
+  <a href="https://www.eclemma.org/jacoco/" target="_blank">
+    <img src="https://img.shields.io/badge/JaCoCo-C71A36?style=flat-square&logo=eclipseide&logoColor=white" alt="JaCoCo" />
+  </a>
+  <a href="https://www.sonarqube.org/" target="_blank">
+    <img src="https://img.shields.io/badge/SonarQube-4E9BCD?style=flat-square&logo=sonarqube&logoColor=white" alt="SonarQube" />
+  </a>
+  <a href="https://kubernetes.io" target="_blank">
+    <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=flat-square&logo=kubernetes&logoColor=white" alt="Kubernetes" />
+  </a>
+  <a href="https://aws.amazon.com" target="_blank">
+    <img src="https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=amazon-aws&logoColor=FF9900" alt="AWS" />
+  </a>
+</p>
+
 ## Pre-requisites
 - aws cli, eksctl, kubectl, helm packages should be installed.
 

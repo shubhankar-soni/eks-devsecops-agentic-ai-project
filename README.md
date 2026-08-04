@@ -1,5 +1,11 @@
 # AWS EKS DevSecOps Agentic AI Project
-
+[![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white)](https://www.java.com)
+[![Gradle](https://img.shields.io/badge/Gradle-02303A?style=flat&logo=gradle&logoColor=white)](https://gradle.org)
+[![JUnit](https://img.shields.io/badge/JUnit5-25A162?style=flat&logo=junit5&logoColor=white)](https://junit.org/junit5/)
+[![JaCoCo](https://img.shields.io/badge/JaCoCo-C71A36?style=flat&logo=eclipseide&logoColor=white)](https://www.eclemma.org/jacoco/)
+[![SonarQube](https://img.shields.io/badge/SonarQube-4E9BCD?style=flat&logo=sonarqube&logoColor=white)](https://www.sonarqube.org/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=flat&logo=kubernetes&logoColor=white)](https://kubernetes.io)
+[![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat&logo=amazon-aws&logoColor=FF9900)](https://aws.amazon.com)
 ## Pre-requisites
 - aws cli, eksctl, kubectl, helm packages should be installed.
 
@@ -142,6 +148,7 @@ Go to **Manage Jenkins > Plugins > Available Plugins** and install:
 - `SonarQube Scanner`
 - `Pipeline: Stage View`
 - `Pipeline Utility Steps`
+- `Email Extension Plugin`
 
 ### Add SonarQube credentials
 Go to **Manage Jenkins > Credentials > System > Global credentials > Add Credentials**:
@@ -251,7 +258,7 @@ Configure:
 ---
 
 ## 15) Configure Jenkins SMTP
-Go to: **Manage Jenkins → System → E-mail Notification**
+Go to: **Manage Jenkins → System →Extended E-mail Notification**
 
 Configure:
 - SMTP Server: `smtp.gmail.com`

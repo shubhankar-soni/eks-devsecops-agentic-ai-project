@@ -190,7 +190,7 @@ post {
 
             withCredentials([
                 usernamePassword(
-                    credentialsId: 'jenkins-ai-agent',
+                    credentialsId: 'jenkins-api-token',
                     usernameVariable: 'JENKINS_USER',
                     passwordVariable: 'JENKINS_TOKEN'
                 )

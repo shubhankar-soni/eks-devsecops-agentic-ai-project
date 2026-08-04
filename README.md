@@ -11,7 +11,7 @@
 1. Create `cluster.yaml` for the EKS cluster.
 2. Create the cluster:
    ```bash
-   eksctl create cluster -f cluster.yaml
+   eksctl create cluster -f eks/cluster.yaml
    ```
 3. Once created, check the nodes:
    ```bash
@@ -95,8 +95,8 @@ WARNING: The deploymentType value is deprecated and won't be supported anymore.
 ### SonarQube: Configure webhook
 - Go to **Administration > Configuration > Webhooks**
 - Create webhook named `jenkins-webhook` pointing to:
-  - `http:///sonarqube-webhook/`
-- Replace `` with the real Jenkins URL later.
+  - `http://<JENKINS-URL>:8080/sonarqube-webhook/`
+- Replace `<JENKINS-URL>` with the real Jenkins URL later.
 
 ## 5) Deploy Jenkins Controller on EKS
 ### 5.1 Add Jenkins Helm repo
@@ -148,12 +148,6 @@ Go to **Manage Jenkins > Credentials > System > Global credentials > Add Credent
 - Kind: `Secret text`
 - Secret: SonarQube token from Phase 3
 - ID: `sonarqube-token`
-
-### Add OpenAI API credentials (for the AI Agent)
-Add credentials:
-- Kind: `Secret text`
-- Secret: OpenAI API key
-- ID: `openai-api-key`
 
 ### Connect SonarQube system
 Go to **Manage Jenkins > System** → **SonarQube servers** → **Add SonarQube**:
@@ -216,7 +210,7 @@ template {
 The failure-analysis process needs permission to retrieve the Jenkins build's console log.
 
 - Log in to Jenkins with a user that can read the pipeline.
-- Navigate to: User Profile → Security → API Token → Add new Token → Generate
+- Navigate to: User Profile → Security → API Token → Add new Token → Generate  (ID: jenkins-api-token)
 - Copy the generated API token.
 
 ## 12) Store Jenkins API credentials
@@ -229,9 +223,9 @@ Go to:
 
 Configure:
 - Kind: **Username with password**
-- Username: ``
-- Password: ``
-- ID: `jenkins-ai-agent`
+- Username: `<YOUR ACTUAL JENKINS USERNAME>`
+- Password: `<YOUR GENERATED API TOKEN>`
+- ID: `jenkins-api-token`
 
 ## 13) Configure Gmail for Jenkins notifications
 The Google account used for Jenkins notifications needs **2-Step Verification** enabled.
@@ -250,14 +244,14 @@ Go to:
 
 Configure:
 - Kind: **Username with password**
-- Username: ``
-- Password: ``
+- Username: `your-email@gmail.com`
+- Password: `<the 16-character Google App Password>`
 - ID: `gmail-smtp`
 
 ---
 
 ## 15) Configure Jenkins SMTP
-Go to: **Manage Jenkins → System → Extended E-mail Notification**
+Go to: **Manage Jenkins → System → E-mail Notification**
 
 Configure:
 - SMTP Server: `smtp.gmail.com`

@@ -1,24 +1,47 @@
 # AWS EKS DevSecOps Agentic AI Project
 
 <p align="center">
+  <!-- Python -->
+  <a href="https://www.python.org" target="_blank">
+    <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
+  </a>
+  &nbsp;
+  <!-- Gemini LLM -->
+  <a href="https://deepmind.google/technologies/gemini/" target="_blank">
+    <img src="https://img.shields.io/badge/Google%20Gemini-8E75B2?style=flat-square&logo=googlegemini&logoColor=white" alt="Google Gemini" />
+  </a>
+  &nbsp;
+  <!-- Java -->
   <a href="https://www.java.com" target="_blank">
     <img src="https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java" />
   </a>
+  &nbsp;
+  <!-- Gradle -->
   <a href="https://gradle.org" target="_blank">
     <img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white" alt="Gradle" />
   </a>
+  &nbsp;
+  <!-- JUnit -->
   <a href="https://junit.org/junit5/" target="_blank">
     <img src="https://img.shields.io/badge/JUnit5-25A162?style=flat-square&logo=junit5&logoColor=white" alt="JUnit" />
   </a>
+  &nbsp;
+  <!-- JaCoCo -->
   <a href="https://www.eclemma.org/jacoco/" target="_blank">
     <img src="https://img.shields.io/badge/JaCoCo-C71A36?style=flat-square&logo=eclipseide&logoColor=white" alt="JaCoCo" />
   </a>
+  &nbsp;
+  <!-- SonarQube -->
   <a href="https://www.sonarqube.org/" target="_blank">
     <img src="https://img.shields.io/badge/SonarQube-4E9BCD?style=flat-square&logo=sonarqube&logoColor=white" alt="SonarQube" />
   </a>
+  &nbsp;
+  <!-- Kubernetes -->
   <a href="https://kubernetes.io" target="_blank">
     <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=flat-square&logo=kubernetes&logoColor=white" alt="Kubernetes" />
   </a>
+  &nbsp;
+  <!-- AWS -->
   <a href="https://aws.amazon.com" target="_blank">
     <img src="https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=amazon-aws&logoColor=FF9900" alt="AWS" />
   </a>

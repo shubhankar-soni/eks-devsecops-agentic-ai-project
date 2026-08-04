@@ -348,3 +348,9 @@ environment {
 ```
 
 Make sure `ECR_REGISTRY` is defined appropriately for your Jenkins environment/job.
+
+## 19) Destroy the EKS cluster and ECR Registry
+   ```bash
+   eksctl delete cluster --name devops-project-cluster --region us-east-1
+   ```
+  To delete ECR Registry: **AWS Console → Aamazon ECR → Private Registry → Repositories → Delete the Private Registry create in initial step**
